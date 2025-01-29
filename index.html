@@ -107,7 +107,9 @@
             ];
 
             const dayData = {};
-            const savedProgress = {}; // Store data persistently across days
+            const savedProgress = JSON.parse(localStorage.getItem('savedProgress')) || {}; // Load from localStorage
+            const completedDays = new Set(JSON.parse(localStorage.getItem('completedDays')) || []); // Load from localStorage
+
             for (let i = 1; i <= 30; i++) {
                 const workout = weeklyWorkouts[(i - 1) % weeklyWorkouts.length];
                 dayData[i] = {
@@ -117,7 +119,6 @@
             }
 
             let currentDay = 1;
-            const completedDays = new Set();
             const dayTitle = document.getElementById("day-title");
             const exerciseOption = document.getElementById("exercise-option");
             const exerciseListDiv = document.getElementById("exercise-list");
@@ -225,6 +226,10 @@
                 completedDays.add(currentDay);
                 lockInputs();
                 renderCalendar();
+
+                // Save to localStorage
+                localStorage.setItem('savedProgress', JSON.stringify(savedProgress));
+                localStorage.setItem('completedDays', JSON.stringify(Array.from(completedDays)));
             });
 
             function lockInputs() {
@@ -253,5 +258,3 @@
             renderCalendar();
         });
     </script>
-</body>
-</html>
